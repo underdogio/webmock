@@ -51,8 +51,23 @@ describe WebMock::RequestStub do
       Net::HTTP.get('www.google.com', '/')
       stub2 = stub_request(:get, "www.google.com").to_return(body: "def")
       Net::HTTP.get('www.google.com', '/')
+      WebMock.disable_net_connect!
 
       puts stub2.requests.size # will return 3
+    end
+
+    it "test2" do
+      WebMock.allow_net_connect!
+      require 'net/http'
+      # stub1 = stub_request(:post, "www.google.com").to_return(body: "def")
+      stub2 = stub_request(:post, "www.google.com").with(:body => {:param1 => 'one'}.to_json).to_return(body: "abc")
+      uri = URI('http://www.google.com/')
+      Net::HTTP.post_form(uri, :param1 => 'one')
+      Net::HTTP.post_form(uri, :param1 => 'two')
+      WebMock.disable_net_connect!
+
+      # puts stub1.requests.size # will return 2, despite it only handled the last request
+      puts stub2.requests.size # will return 2, despite it only handled the last request
     end
 
   end
