@@ -40,6 +40,7 @@ describe WebMock::RequestStub do
       signature2 = WebMock::RequestSignature.new(:get, "www.example.com")
       WebMock::RequestRegistry.instance.requested_signatures.put(signature1)
       WebMock::RequestRegistry.instance.requested_signatures.put(signature2)
+      puts WebMock::RequestRegistry.instance.requested_signatures.order
       expect(@request_stub).to have_been_requested.times(2)
       expect(@request_stub.requests).to eq([signature1, signature2])
     end
