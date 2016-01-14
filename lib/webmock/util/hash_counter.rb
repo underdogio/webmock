@@ -3,18 +3,20 @@ require 'thread'
 module WebMock
   module Util
     class Util::HashCounter
+      attr_accessor :ary
       attr_accessor :hash
-      attr_accessor :order
       def initialize
+        self.ary = []
         self.hash = {}
-        self.order = {}
+        @order = {}
         @max = 0
         @lock = ::Mutex.new
       end
       def put key, num=1
         @lock.synchronize do
           hash[key] = (hash[key] || 0) + num
-          order[key] = @max = @max + 1
+          ary << key
+          @order[key] = @max = @max + 1
         end
       end
       def get key
@@ -24,7 +26,7 @@ module WebMock
       end
 
       def each(&block)
-        order.to_a.sort {|a, b| a[1] <=> b[1]}.each do |a|
+        @order.to_a.sort {|a, b| a[1] <=> b[1]}.each do |a|
           block.call(a[0], hash[a[0]])
         end
       end

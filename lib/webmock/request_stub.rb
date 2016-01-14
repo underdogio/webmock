@@ -57,7 +57,7 @@ module WebMock
     # @return [Array] the requested `WebMock::RequestSignature`s which match this stubs `@request_pattern`
     def requests
       request_registry = WebMock::RequestRegistry.instance
-      signatures = request_registry.requested_signatures.hash.keys()
+      signatures = request_registry.requested_signatures.ary
       return signatures.select { |signature|
         @request_pattern.matches?(signature)
       }
