@@ -43,6 +43,18 @@ describe WebMock::RequestStub do
       expect(@request_stub.requests).to eq([signature1, signature2])
     end
 
+    it "test1" do
+      WebMock.allow_net_connect!
+      require 'net/http'
+      Net::HTTP.get('www.google.com', '/')
+      stub1 = stub_request(:get, "www.google.com").to_return(body: "abc")
+      Net::HTTP.get('www.google.com', '/')
+      stub2 = stub_request(:get, "www.google.com").to_return(body: "def")
+      Net::HTTP.get('www.google.com', '/')
+
+      puts stub2.requests.size # will return 3
+    end
+
   end
 
   describe "last_request" do
