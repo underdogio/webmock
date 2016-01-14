@@ -35,6 +35,14 @@ describe WebMock::RequestStub do
       expect(@request_stub.requests).to eq([match])
     end
 
+    it "should not combine identical requests" do
+      signature1 = WebMock::RequestSignature.new(:get, "www.example.com")
+      signature2 = WebMock::RequestSignature.new(:get, "www.example.com")
+      WebMock::RequestRegistry.instance.requested_signatures.put(signature1)
+      WebMock::RequestRegistry.instance.requested_signatures.put(signature2)
+      expect(@request_stub.requests).to eq([signature1, signature2])
+    end
+
   end
 
   describe "last_request" do
