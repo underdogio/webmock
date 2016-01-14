@@ -53,6 +53,8 @@ describe WebMock::RequestStub do
       Net::HTTP.get('www.google.com', '/')
       WebMock.disable_net_connect!
 
+      expect(stub2).to(have_been_requested.once())
+
       puts stub2.requests.size # will return 3
     end
 
@@ -65,6 +67,8 @@ describe WebMock::RequestStub do
       Net::HTTP.post_form(uri, :param1 => 'one')
       Net::HTTP.post_form(uri, :param1 => 'two')
       WebMock.disable_net_connect!
+
+      expect(stub1).to(have_been_requested.once())
 
       puts stub1.requests.size # will return 2, despite it only handled the last request
       puts stub2.requests.size
